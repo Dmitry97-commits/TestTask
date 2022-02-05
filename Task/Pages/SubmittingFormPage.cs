@@ -25,6 +25,7 @@ namespace Task.Pages
                  DateOfBirth = ListOfValues[(int)Fields.DateOfBirth].GetText(),
                  Hobbies = ListOfValues[(int)Fields.Hobbies].GetText(),
                  Picture = ListOfValues[(int)Fields.Picture].GetText(),
+                 StateAndCity = ListOfValues[(int)Fields.StateAndCity].GetText()
              };
              return submittingFormModel;
         }
@@ -37,7 +38,8 @@ namespace Task.Pages
             Mobile,
             DateOfBirth,
             Hobbies = 6,
-            Picture
+            Picture,
+            StateAndCity = 9
         }
     }
 }

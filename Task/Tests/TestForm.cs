@@ -34,9 +34,10 @@ namespace Task.Tests
             var number = practiceFormPage.EnterPhoneNumber();
             var birthDay = practiceFormPage.EnterBirthday(TestData.yearOfBD, TestData.monthOfBD, TestData.dayOfBD);
             var hobbies = practiceFormPage.EnterHobbies();
-            practiceFormPage.UploadFile(pathToFile)
-                            .ClickBySubmitButton();
-
+            practiceFormPage.UploadFile(pathToFile);
+            var stateAndCity = practiceFormPage.SelectStateAndCity();
+            practiceFormPage.ClickBySubmitButton();
+                            
             Assert.IsTrue(submittingFormPage.State.IsDisplayed, "Page not displayed");
 
             var submittingFormFromPage = submittingFormPage.GetValuesFromForm();
@@ -49,11 +50,12 @@ namespace Task.Tests
                   Mobile = number,
                   DateOfBirth = birthDay,
                   Hobbies = hobbies,
-                  Picture = ConfigsData.nameOfFile
+                  Picture = ConfigsData.nameOfFile,
+                  StateAndCity = stateAndCity
             };
 
             Assert.Multiple(() =>
-            {
+           {
                 Assert.AreEqual(submittingFormModel.StudentName, submittingFormFromPage.StudentName, "Names are not equal");
                 Assert.AreEqual(submittingFormModel.StudentEmail, submittingFormFromPage.StudentEmail, "Emails are not equal");
                 Assert.AreEqual(submittingFormModel.Gender, submittingFormFromPage.Gender, "Genders are not equal");
@@ -61,7 +63,8 @@ namespace Task.Tests
                 Assert.AreEqual(submittingFormModel.DateOfBirth, submittingFormFromPage.DateOfBirth, "Dates of birth are not equal");
                 Assert.AreEqual(submittingFormModel.Hobbies, submittingFormFromPage.Hobbies, "Hobbies are not equal");
                 Assert.AreEqual(submittingFormModel.Picture, submittingFormFromPage.Picture, "Pictures are not equal");
-            });
+                Assert.AreEqual(submittingFormModel.StateAndCity, submittingFormFromPage.StateAndCity, "States and city are not equal");
+           });
         }
     }
 }

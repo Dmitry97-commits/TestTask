@@ -3,6 +3,7 @@ using Aquality.Selenium.Browsers;
 using Aquality.Selenium.Elements.Interfaces;
 using Aquality.Selenium.Forms;
 using OpenQA.Selenium;
+using OpenQA.Selenium.Interactions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,16 +32,19 @@ namespace Task.Pages
 
         private ILabel InputDayLabel(string day) => ElementFactory.GetLabel(By.XPath($"//div[contains(@class,'datepicker__day')and contains(text(),'{day}')]"), "Day");
 
-        private List<ILabel> EnterCheckBoxHobbies => (List<ILabel>)ElementFactory.FindElements<ILabel>(By.XPath("//label[contains(@for,'hobbies-checkbox')]"), "");
+        private List<ILabel> EnterCheckBoxHobbies => (List<ILabel>)ElementFactory.FindElements<ILabel>(By.XPath("//label[contains(@for,'hobbies-checkbox')]"), "Hobbies");
 
         private ITextBox BirthDayTextBox => ElementFactory.GetTextBox(By.Id("dateOfBirthInput"), "Birthday field");
 
         private IButton UploadButton => ElementFactory.GetButton(By.Id("uploadPicture"), "Upload Button");
 
-        private IButton StateButton => ElementFactory.GetButton(By.Id("state"), "State and city");
+        private IButton StateButton => ElementFactory.GetButton(By.Id("state"), "State");
+
+        private IButton CityButton => ElementFactory.GetButton(By.Id("city"), "City");
 
         private IButton SubmitButton => ElementFactory.GetButton(By.Id("submit"), "Submit");
 
+        private List<IButton> ResultOfStateAndCity => (List<IButton>)ElementFactory.FindElements<IButton>(By.XPath("//div[contains(@class,'singleValue')]"));
         public PracticeFormPage() : base(By.Id("userName-wrapper"), "Practice form") { }
 
         public PracticeFormPage EnterName(string name)
@@ -109,11 +113,21 @@ namespace Task.Pages
             return this;
         }
 
-        public PracticeFormPage SelectState()
+        public string SelectStateAndCity()
         {
+            List<string> stateAndCity = new List<string>();
             StateButton.MouseActions.MoveToElement();
             StateButton.State.WaitForClickable();
-            return this;
+            StateButton.Click();
+            Actions actions = new Actions(AqualityServices.Browser.Driver);
+            actions.SendKeys(Keys.ArrowDown + Keys.Enter).Perform();
+            CityButton.Click();
+            actions.SendKeys(Keys.ArrowDown + Keys.Enter).Perform();
+            foreach(IButton button in ResultOfStateAndCity)
+            {
+                stateAndCity.Add(button.GetText());
+            }
+            return string.Join(" ", stateAndCity);
         }
 
         public SubmittingFormPage ClickBySubmitButton()
